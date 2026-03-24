@@ -1,0 +1,297 @@
+/* ───────────────────────────────────────────
+   NOTA A NOTA — style.css
+   Estética: Arcade retro / CRT synthwave
+─────────────────────────────────────────── */
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Variables ── */
+:root {
+  --bg:      #06060f;
+  --surface: #0b0b1e;
+  --border:  #1e1e4a;
+  --border2: #2a2a6a;
+  --cyan:    #00f5ff;
+  --gold:    #ffd700;
+  --text:    #bbbbd8;
+  --dim:     #44447a;
+  --font:    'Press Start 2P', monospace;
+
+  /* Colores de cada nota (igual que en game.js) */
+  --c-C: #ff6b6b;
+  --c-D: #ff9f43;
+  --c-E: #ffd32a;
+  --c-F: #51cf66;
+  --c-G: #4dabf7;
+  --c-A: #cc5de8;
+  --c-B: #f783ac;
+}
+
+/* ── Body ── */
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 15% 15%, rgba(0, 80, 200, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 85%, rgba(120, 0, 200, 0.07) 0%, transparent 55%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font);
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* ── Wrapper ── */
+#wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 800px;
+  position: relative;
+}
+
+/* ── HUD ── */
+#hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 2px solid var(--border2);
+  border-bottom: none;
+}
+
+.hud-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 80px;
+}
+
+.align-right { text-align: right; }
+
+.hud-label {
+  font-size: 6px;
+  color: var(--dim);
+  letter-spacing: 2px;
+}
+
+#hud-score {
+  font-size: 14px;
+  color: var(--gold);
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+}
+
+#hud-time {
+  font-size: 14px;
+  color: var(--cyan);
+  text-shadow: 0 0 12px rgba(0, 245, 255, 0.6);
+}
+
+#hud-time.urgent {
+  color: #ff6b6b;
+  text-shadow: 0 0 12px rgba(255, 80, 80, 0.8);
+  animation: blink-time 0.5s step-end infinite;
+}
+
+@keyframes blink-time {
+  50% { opacity: 0.3; }
+}
+
+/* Secuencia de notas en HUD */
+#seq-block { flex: 1; align-items: center; }
+
+#hud-seq {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.note-chip {
+  font-size: 8px;
+  padding: 3px 7px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  opacity: 0.45;
+  transition: all 0.15s ease;
+}
+
+.note-chip.active {
+  opacity: 1;
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 10px currentColor, 0 0 22px currentColor;
+  animation: pulse-chip 0.75s ease-in-out infinite alternate;
+}
+
+.note-chip.done {
+  opacity: 0.18;
+  text-decoration: line-through;
+  border-style: dashed;
+}
+
+.hud-arrow {
+  color: var(--dim);
+  font-size: 9px;
+}
+
+@keyframes pulse-chip {
+  from { transform: scale(1);    letter-spacing: 0; }
+  to   { transform: scale(1.12); letter-spacing: 1px; }
+}
+
+/* ── Canvas ── */
+canvas {
+  display: block;
+  border: 2px solid var(--border2);
+  image-rendering: pixelated;
+}
+
+/* ── Overlay ── */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 4, 14, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  backdrop-filter: blur(6px);
+}
+
+#overlay.hidden { display: none; }
+
+#ov-box {
+  background: var(--surface);
+  border: 2px solid var(--border2);
+  padding: 36px 44px;
+  text-align: center;
+  max-width: 460px;
+  width: 90%;
+  box-shadow:
+    0 0 60px rgba(0, 100, 255, 0.12),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* Logo nota musical */
+#ov-logo {
+  font-size: 42px;
+  margin-bottom: 10px;
+  animation: spin-logo 6s linear infinite;
+  display: inline-block;
+  filter: drop-shadow(0 0 12px var(--cyan));
+}
+
+@keyframes spin-logo {
+  0%   { transform: rotateY(0deg);   color: var(--cyan); }
+  25%  { transform: rotateY(90deg);  color: var(--gold); }
+  50%  { transform: rotateY(180deg); color: #cc5de8; }
+  75%  { transform: rotateY(270deg); color: #51cf66; }
+  100% { transform: rotateY(360deg); color: var(--cyan); }
+}
+
+#ov-title {
+  font-size: 20px;
+  color: var(--cyan);
+  text-shadow: 0 0 24px var(--cyan), 0 0 48px rgba(0, 245, 255, 0.25);
+  margin-bottom: 18px;
+  letter-spacing: 3px;
+}
+
+#ov-msg {
+  font-size: 8px;
+  color: var(--text);
+  line-height: 2.2;
+  margin-bottom: 18px;
+}
+
+/* Demo secuencia coloreada */
+#ov-seq-demo {
+  font-size: 13px;
+  margin-bottom: 24px;
+  letter-spacing: 2px;
+}
+
+.arrow-demo {
+  color: var(--dim);
+  font-size: 10px;
+  margin: 0 1px;
+}
+
+/* D-pad de teclas */
+#ov-keys {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 26px;
+}
+
+.key-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.key {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--border2);
+  background: #090918;
+  font-size: 12px;
+  border-radius: 4px;
+  box-shadow: 0 3px 0 var(--border);
+  color: var(--text);
+}
+
+.key-gap  { width: 30px; }
+
+.key-alt {
+  font-size: 6px;
+  color: var(--dim);
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+/* Botón start */
+#ov-btn {
+  font-family: var(--font);
+  font-size: 10px;
+  padding: 12px 30px;
+  background: transparent;
+  border: 2px solid var(--cyan);
+  color: var(--cyan);
+  cursor: pointer;
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px var(--cyan);
+  box-shadow: 0 0 18px rgba(0,245,255,0.2), inset 0 0 18px rgba(0,245,255,0.04);
+  transition: all 0.2s ease;
+  border-radius: 2px;
+}
+
+#ov-btn:hover {
+  background: rgba(0, 245, 255, 0.07);
+  box-shadow: 0 0 32px rgba(0,245,255,0.4), inset 0 0 24px rgba(0,245,255,0.08);
+  transform: translateY(-2px);
+}
+
+#ov-btn:active { transform: translateY(0); }
+
+/* ── Responsive (escala en pantallas chicas) ── */
+@media (max-width: 820px) {
+  #wrap {
+    width: 100vw;
+    transform-origin: top center;
+  }
+  canvas {
+    width: 100vw !important;
+    height: auto !important;
+  }
+}

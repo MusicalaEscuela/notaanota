@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nota a Nota</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="wrap">
+
+    <!-- ── HUD ──────────────────────────────────────────────── -->
+    <header id="hud">
+      <div class="hud-block">
+        <span class="hud-label">PUNTOS</span>
+        <span id="hud-score">00000</span>
+      </div>
+
+      <div class="hud-block" id="seq-block">
+        <span class="hud-label">SECUENCIA</span>
+        <div id="hud-seq"></div>
+      </div>
+
+      <div class="hud-block align-right">
+        <span class="hud-label">TIEMPO</span>
+        <span id="hud-time">60</span>
+      </div>
+    </header>
+
+    <!-- ── CANVAS ────────────────────────────────────────────── -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- ── OVERLAY (inicio / fin) ────────────────────────────── -->
+    <div id="overlay">
+      <div id="ov-box">
+        <div id="ov-logo">♩</div>
+        <h1 id="ov-title">NOTA A NOTA</h1>
+        <p id="ov-msg">
+          Recoge las 7 notas musicales<br>
+          en el orden correcto<br>
+          antes de que se acabe el tiempo.
+        </p>
+
+        <!-- Demo secuencia con colores -->
+        <div id="ov-seq-demo">
+          <span style="color:#ff6b6b">C</span><span class="arrow-demo">›</span>
+          <span style="color:#ff9f43">D</span><span class="arrow-demo">›</span>
+          <span style="color:#ffd32a">E</span><span class="arrow-demo">›</span>
+          <span style="color:#51cf66">F</span><span class="arrow-demo">›</span>
+          <span style="color:#4dabf7">G</span><span class="arrow-demo">›</span>
+          <span style="color:#cc5de8">A</span><span class="arrow-demo">›</span>
+          <span style="color:#f783ac">B</span>
+        </div>
+
+        <!-- Indicador de teclas -->
+        <div id="ov-keys">
+          <div class="key-row"><div class="key">↑</div></div>
+          <div class="key-row">
+            <div class="key">←</div>
+            <div class="key-gap"></div>
+            <div class="key">↓</div>
+            <div class="key-gap"></div>
+            <div class="key">→</div>
+          </div>
+          <div class="key-alt">también: WASD</div>
+        </div>
+
+        <button id="ov-btn">COMENZAR</button>
+      </div>
+    </div>
+
+  </div><!-- /wrap -->
+
+  <script src="game.js"></script>
+</body>
+</html>
